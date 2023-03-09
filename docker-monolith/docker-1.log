@@ -1,0 +1,10 @@
+root@Igor:/home/house/GitHub/igorborodko_infra/dockermonolith# docker images
+REPOSITORY                    TAG       IMAGE ID       CREATED              SIZE
+yourname/ubuntu-tmp-file      latest    14da47d6fb1a   About a minute ago   63.1MB
+nginx                         latest    3f8a00f137a0   12 days ago          142MB
+ubuntu                        18.04     5d2df19066ac   3 weeks ago          63.1MB
+ubuntu                        latest    27941809078c   8 months ago         77.8MB
+gcr.io/k8s-minikube/kicbase   v0.0.30   1312ccd2422d   12 months ago        1.14GB
+hello-world                   latest    feb5d9fea6a5   17 months ago        13.3kB
+---
+У контейнера заданы настройки сети.
