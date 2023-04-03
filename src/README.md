@@ -36,3 +36,30 @@ docker run -d --network=reddit --network-alias=post_db --network-alias=comment_d
 docker run -d --network=reddit --network-alias=post housedegor/post:1.0
 docker run -d --network=reddit --network-alias=comment housedegor/comment:1.0
 docker run -d --network=reddit -p 9292:9292 housedegor/ui:2.0
+
+
+# -------------------------------------
+
+
+
+docker run -d --network=reddit mongo:4.2-rc
+docker run -d --network=reddit housedegor/post:1.0 
+docker run -d --network=reddit housedegor/comment:1.0
+docker run -d --network=reddit -p 9292:9292 housedegor/ui:1.0 
+
+docker kill $(docker ps -q) 
+---
+
+docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db mongo:4.2-rc
+docker run -d --network=reddit --network-alias=post housedegor/post:1.0
+docker run -d --network=reddit --network-alias=comment housedegor/comment:1.0
+docker run -d --network=reddit -p 9292:9292 housedegor/ui:1.0
+
+docker kill $(docker ps -q) 
+---
+
+docker run -d --network=front_net -p 9292:9292 --name ui housedegor/ui:1.0
+docker run -d --network=back_net --name comment housedegor/comment:1.0
+docker run -d --network=back_net --name post housedegor/post:1.0 
+docker run -d --network=back_net --name mongo_db \
+ --network-alias=post_db --network-alias=comment_db mongo:4.2-rc
