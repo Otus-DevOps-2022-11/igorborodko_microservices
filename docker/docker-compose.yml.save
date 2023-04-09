@@ -1,0 +1,60 @@
+Creating network "docker_back_net" with the default driver
+Creating network "docker_front_net" with the default driver
+Creating volume "docker_prometheus_data" with default driver
+Creating volume "docker_post_db" with default driver
+Creating docker_ui_1         ... done
+Creating docker_post_db_1    ... done
+Creating docker_comment_1    ... done
+Creating docker_prometheus_1 ... done
+Creating docker_post_1       ... done
+root@Igor:/home/house/GitHub/igorborodko_microservices/docker# docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS          PORTS                    NAMES
+ceb40c113228   mongo:3.2                "docker-entrypoint.s…"   44 seconds ago   Up 35 seconds   27017/tcp                docker_post_db_1
+e69df41017ec   housedegor/ui:1.0        "puma"                   44 seconds ago   Up 36 seconds   0.0.0.0:9292->9292/tcp   docker_ui_1
+f12341b03e5f   housedegor/prometheus    "/bin/prometheus --c…"   44 seconds ago   Up 35 seconds   0.0.0.0:9090->9090/tcp   docker_prometheus_1
+2d0aa84cb462   housedegor/comment:1.0   "puma"                   44 seconds ago   Up 35 seconds                            docker_commenconds                            docker_post_1version: '3.3'
+services:
+  post_db:
+    image: mongo:${MONGO_VER}
+    volumes:
+      - post_db:/data/db
+    networks:
+      - back_net
+  ui:
+    image: ${USERNAME}/ui:${SERVICE_VER}
+    ports:
+      - 9292:9292/tcp
+    networks:
+      - front_net
+  post:
+    image: ${USERNAME}/post:${SERVICE_VER}
+    networks:
+      - front_net
+      - back_net
+  comment:
+    image: ${USERNAME}/comment:${SERVICE_VER}
+    networks:
+      - back_net
+      - front_net
+  prometheus:
+    image: ${USERNAME}/prometheus
+    ports:
+      - '9090:9090'
+   
+    volumes:
+      - prometheus_data:/prometheus
+    command: # Передаем доп параметры в командной строке
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d' # Задаем время хранения метрик в 1 день
+    networks:
+      - back_net
+      - front_net
+
+volumes:
+  prometheus_data:
+  post_db:
+
+networks:
+  back_net:
+  front_net:
